@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Camper">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Camper">
+    <meta name="keywords" content="Camper | Camper">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>网络基础 · Camper&#39;s Blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180709 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180709 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Camper&#39;s Blog.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">网络基础</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Camper's Blog.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            网络基础
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">3,563</span> / Reading time: <span class="post-count">13 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/09/12</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="网络的基础知识"><a href="#网络的基础知识" class="headerlink" title="网络的基础知识"></a>网络的基础知识</h2><h3 id="课程目标："><a href="#课程目标：" class="headerlink" title="课程目标："></a>课程目标：</h3><ul>
+<li>了解OSI七层模型和TCP/IP四层模型</li>
+<li>理解TCP/IP的三次握手四次断开</li>
+</ul>
+<p><strong>思考：</strong></p>
+<p>数据是如何在两台主机之间传输的？</p>
+<p><strong>数据传输过程：</strong></p>
+<p><img src="/2018/09/12/网络基础/osi模型.png" alt="osi模型"></p>
+<h3 id="一、OSI七层模型"><a href="#一、OSI七层模型" class="headerlink" title="一、OSI七层模型"></a>一、OSI七层模型</h3><h4 id="1-什么是OSI模型"><a href="#1-什么是OSI模型" class="headerlink" title="1. 什么是OSI模型"></a>1. 什么是OSI模型</h4><p><strong>OSI:</strong></p>
+<ul>
+<li><p>开放系统互连参考模型,是国际标准化组织(ISO)和国际电报电话咨询委员会(CCITT)联合制定的开放系统互连参考模型。</p>
+</li>
+<li><p><strong>目的</strong>:为开放式互连信息系统提供了一种功能结构的框架和参考。</p>
+</li>
+<li><p>这里所说的开放系统，实质上指的是遵循OSI参考模型和相关协议能够实现互连的具有各种应用目的的计算机系统。</p>
+</li>
+<li><p>OSI采用了分层的结构化技术，共分七层：</p>
+<p><strong>物理层、数据链路层、网络层、传输层、会话层、表示层、应用层</strong></p>
+</li>
+</ul>
+<h4 id="2-OSI的七层介绍"><a href="#2-OSI的七层介绍" class="headerlink" title="2. OSI的七层介绍"></a>2. OSI的七层介绍</h4><h5 id="2-1-应用层"><a href="#2-1-应用层" class="headerlink" title="2.1 应用层"></a>2.1 应用层</h5><ul>
+<li>应用层是计算机用户，以及各种应用程序和网络之间的接口，其功能是直接向用户提供服务，完成用户希望在网络上完成的各种工作。</li>
+<li>应用层为用户提供的服务和协议：文件传输服务（FTP）、远程登录服务（ssh）、网络管理服等。</li>
+<li>上述的各种网络服务由该层的不同应用协议和程序完成。</li>
+<li>应用层的主要功能如下：<ul>
+<li>用户接口：应用层是用户与网络，以及应用程序与网络间的直接接口，使得用户能够与网络进行交互式联系。</li>
+<li>实现各种服务：该层具有的各种应用程序可以完成和实现用户请求的各种服务。</li>
+</ul>
+</li>
+</ul>
+<h5 id="2-2-表示层"><a href="#2-2-表示层" class="headerlink" title="2.2 表示层"></a>2.2 表示层</h5><ul>
+<li>表示层是<strong>对来自应用层的命令和数据进行解释，对各种语法赋予相应的含义，并按照一定的格式传送给会话层。</strong></li>
+<li>其主要功能是<strong>处理用户信息的表示问题</strong>，如编码、数据格式转换和加密解密等。</li>
+<li>表示层的具体功能如下：<ul>
+<li>数据格式处理：协商和建立数据交换的格式，解决各应用程序之间在数据格式表示上的差异。</li>
+<li>数据的编码：处理字符集和数字的转换。例如由于用户程序中的数据类型（整型或非整型、有符号或无符号等）、用户标识等都可以有不同的表示方式，因此，在设备之间需要具有在不同字符集或格式之间转换的功能。</li>
+<li>压缩和解压缩：为了减少数据的传输量，这一层还负责数据的压缩与解压缩。</li>
+<li>数据的加密和解密：可以提高网络的安全性。</li>
+</ul>
+</li>
+</ul>
+<h5 id="2-3-会话层"><a href="#2-3-会话层" class="headerlink" title="2.3 会话层"></a>2.3 会话层</h5><ul>
+<li><p>会话层是用户应用程序和网络之间的接口，主要任务是：组织和协调两个会话进程之间的通信，并对数据交换进行管理。</p>
+</li>
+<li><p>当建立会话时，用户必须提供他们想要连接的远程地址。</p>
+</li>
+<li><p>会话层的具体功能如下：</p>
+<ul>
+<li>会话管理：</li>
+</ul>
+<p>允许用户在两个实体设备之间建立、维持和终止会话，并支持他们之间的数据交换.</p>
+<p>比如:提供单方向会话或者双方向会话时，管理会话中的发送顺序，以及会话所占用时间的长短。</p>
+<ul>
+<li>会话流量控制：提供会话流量控制和交叉会话功能。</li>
+<li>寻址：使用远程地址建立会话连接。</li>
+<li>差错控制：</li>
+</ul>
+<p>从逻辑上讲会话层主要负责数据交换的建立、保持和终止，但实际的工作是接收来自传输层的数据，并负责纠正错误。但需要注意，该层检查的错误不是通讯介质的错误，而是磁盘空间、打印机缺纸之类的高级错误。</p>
+</li>
+</ul>
+<h5 id="2-4-传输层"><a href="#2-4-传输层" class="headerlink" title="2.4 传输层"></a>2.4 传输层</h5><ul>
+<li>OSI上3层：应用层、表示层、会话层的主要任务是数据处理——<strong>资源子网</strong></li>
+<li>OSI下3层：网络层、数据链路层、物理层的主要任务是数据通讯——<strong>通讯子网</strong></li>
+<li>传输层是OSI模型的第4层，它是通信子网和资源子网的接口和桥梁，起到承上启下的作用</li>
+<li>传输层的主要任务是：<strong>向用户提供可靠的端到端的差错和流量控制，保证报文的正确传输</strong></li>
+</ul>
+<p><strong>报文：</strong>报文(message)是网络中交换与传输的<a href="数据单元是网络信息传输的基本单位。一般网络连接不允许传送任意大小的数据包，而是采用分组技术将一个数据分成若干个很小的数据包，并给每个小数据包加上一些关于此数据包的属性信息.">^数据单元</a></p>
+<h5 id="2-5-网络层"><a href="#2-5-网络层" class="headerlink" title="2.5 网络层"></a>2.5 网络层</h5><ul>
+<li>主要任务是：<strong>数据链路层的数据在这一层被转换为<a href="包(Packet)是TCP/IP协议通信传输中的数据单位，一般也称“数据包”。">^数据包</a>，然后通过路径选择、分段组合、顺序、进/出路由等控制，将信息从一个网络设备传送到另一个网络设备。</strong></li>
+<li>一般情况下，数据链路层是解决<strong>同一网络</strong>(局域网)内节点之间的通信，而网络层主要解决<strong>不同子网</strong>间的通信。</li>
+</ul>
+<h5 id="2-6-数据链路层"><a href="#2-6-数据链路层" class="headerlink" title="2.6 数据链路层"></a>2.6 数据链路层</h5><p><strong>在计算机网络中由于各种干扰的存在，物理链路是不可靠的。因此，这一层的主要功能是:</strong></p>
+<ul>
+<li>在物理层提供的比特流的基础上，通过差错控制、流量控制方法，使有差错的物理线路变为无差错的数据链路，即提供可靠的通过物理介质传输数据的方法。</li>
+<li>具体工作是：接收来自物理层的位流（比特流）形式的数据，并封装成帧，传送到上一层；同样，也将来自上层的数据帧，拆装为位流形式的数据转发到物理层；并且，还负责处理接收端发回的确认帧的信息，以便提供可靠的数据传输。</li>
+</ul>
+<h5 id="2-7-物理层"><a href="#2-7-物理层" class="headerlink" title="2.7 物理层"></a>2.7 物理层</h5><ul>
+<li>主要功能是：利用传输介质为数据链路层提供物理连接，实现比特流的透明传输。尽可能屏蔽掉具体传输介质和物理设备的差异。</li>
+</ul>
+<h4 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h4><ul>
+<li>由于OSI是一个理想的模型，因此一般网络系统只涉及其中的几层，很少有系统能够具有所有的7层，并完全遵循它的规定。</li>
+<li>在7层模型中，每一层都提供一个特殊的网络功能。</li>
+<li>从网络功能的角度观察：<ul>
+<li>物理层、数据链路层、网络层：主要提供数据传输和交换功能，即以节点到节点之间的通信为主；</li>
+<li>传输层（第4层）：作为上下两部分的桥梁，是整个网络体系结构中最关键的部分；</li>
+<li>会话层、表示层和应用层：以提供用户与应用程序之间的信息和数据处理功能为主；</li>
+</ul>
+</li>
+</ul>
+<h3 id="二、TCP-IP协议模型"><a href="#二、TCP-IP协议模型" class="headerlink" title="二、TCP/IP协议模型"></a>二、TCP/IP协议模型</h3><h4 id="1-什么是TCP-IP模型"><a href="#1-什么是TCP-IP模型" class="headerlink" title="1. 什么是TCP/IP模型"></a>1. 什么是TCP/IP模型</h4><ul>
+<li><strong>TCP/IP协议模型</strong>（Transmission Control Protocol/Internet Protocol），包含了一系列构成互联网基础的网络协议，是Internet的核心协议，通过20多年的发展已日渐成熟，并被广泛应用于<strong>局域网和广域网</strong>中，目前已成为一种<strong>国际标准</strong>。</li>
+<li>TCP/IP协议簇是一组不同层次上的多个协议的组合，该协议采用了4层的层级结构，每一层都呼叫它的下一层所提供的协议来完成自己的需求，与OSI的七层模型相对应。</li>
+<li>尽管通常称该协议族为TCP/IP，但TCP和IP只是其中的两种协议而已（该协议族的另一个名字是Internet协议族(Internet Protocol Suite)）</li>
+</ul>
+<h4 id="2-TCP-IP的分层结构"><a href="#2-TCP-IP的分层结构" class="headerlink" title="2. TCP/IP的分层结构"></a>2. TCP/IP的分层结构</h4><p><img src="/2018/09/12/网络基础/tcp-ip分层.png" alt="tcp-ip分层"></p>
+<h5 id="2-1-链路层"><a href="#2-1-链路层" class="headerlink" title="2.1 链路层"></a>2.1 <strong>链路层</strong></h5><p><strong><em>OSI的物理层和数据链路层</em></strong></p>
+<ul>
+<li>ARP（地址解析协议<strong>IP-MAC</strong>）和RARP（逆地址解析协议<strong>MAC-IP</strong>）是某些网络接口（如以太网）使用的特殊协议，用来转换IP层和网络接口层使用的地址。</li>
+</ul>
+<h5 id="2-2-网络层"><a href="#2-2-网络层" class="headerlink" title="2.2 网络层"></a>2.2 <strong>网络层</strong></h5><p><strong><em>OSI网络层</em></strong></p>
+<ul>
+<li>也称作互联网层或网际层，处理分组在网络中的活动，例如分组的选路。</li>
+<li>在TCP/IP协议族中，网络层协议包括IP协议（网际协议），ICMP协议（Internet互联网控制报文协议），以及IGMP协议（Internet组管理协议）。<ul>
+<li><strong>IP</strong>是一种网络层协议，提供的是一种不可靠的服务，它只是尽可能快地把分组从源结点送到目的结点，但是并不提供任何可靠性保证。同时被TCP和UDP使用。</li>
+<li>TCP和UDP的每组数据都通过端系统和每个中间路由器中的IP层在互联网中进行传输。</li>
+<li><strong>ICMP</strong>是IP协议的附属协议。IP层用它来与其他主机或路由器<strong>交换错误报文和其他重要信息</strong>。它主要是用来提供有关通向目的地址的路径信息。Ping和Traceroute工具，它们都使用了ICMP协议。</li>
+<li><strong>IGMP</strong>是Internet组管理协议。它用来把一个UDP数据报多播到多个主机。该协议运行在主机和组播路由器之间。</li>
+</ul>
+</li>
+</ul>
+<h5 id="2-3-运输层"><a href="#2-3-运输层" class="headerlink" title="2.3 运输层"></a>2.3 <strong>运输层</strong></h5><p><strong><em>OSI传输层</em></strong></p>
+<p><strong>主要为两台主机上的应用程序提供端到端的通信。在TCP/IP协议族中，有两个互不相同的传输协议：</strong></p>
+<p>TCP（传输控制协议）和UDP（用户数据报协议）<br><strong>TCP协议：</strong>为两台主机提供高可靠性的数据通信。TCP是面向连接的通信协议，通过三次握手建立连接，通讯完成时要断开连接，由于TCP是面向连接的所以只能用于端到端的通讯。TCP提供的是一种可靠的数据流服务，采用“<strong>带重传的肯定确认”</strong>技术来实现传输的可靠性。也就是TCP数据包中包括序号（seq）和确认（ack），所以未按照顺序收到的包可以被排序，而损坏的包可以被重传。<br><strong>UDP协议：</strong>则为应用层提供一种非常简单的服务。它是面向无连接的通讯协议，UDP数据包括目的端口号和源端口号信息，由于通讯不需要连接，所以可以实现广播发送。<br>UDP通讯时不需要接收方确认，不保证该数据报能到达另一端，属于不可靠的传输，可能会出现丢包现象。UDP与TCP位于同一层，但它不管数据包的顺序、错误或重发。</p>
+<h5 id="2-4-应用层"><a href="#2-4-应用层" class="headerlink" title="2.4 应用层"></a>2.4 <strong>应用层</strong></h5><p><strong><em>OSI会话层、表示层、应用层</em></strong></p>
+<p><strong>应用层负责处理特定的应用程序细节。</strong></p>
+<h4 id="3-数据封装过程"><a href="#3-数据封装过程" class="headerlink" title="3. 数据封装过程"></a>3. 数据封装过程</h4><ul>
+<li><p><strong>数据格式</strong></p>
+<p>TCP数据信息：TCP头部+实际数据 (TCP头包括源和目标主机端口号、顺序号、确认号、校验字等）</p>
+<p>IP数据包：IP头部+TCP数据信息（IP头包括源和目标主机IP地址、类型、生存期等）</p>
+<p>数据帧：帧头+IP数据包+帧尾 （帧头包括源和目标主机MAC初步地址及类型，帧尾是校验字）</p>
+</li>
+<li><p><strong>数据的封装与解封装：</strong><br>封装：数据要通过网络进行传输，要从高层一层一层的向下传送，如果一个主机要传送数据到别的主机，先把数据装到一个特殊协议报头中，这个过程叫—–封装。<br>解封装：上述的逆向过程</p>
+<p><strong>当数据以TCP/IP协议传输时的封装与街封装过程如下图：</strong></p>
+<p>​</p>
+</li>
+</ul>
+<p><img src="/2018/09/12/网络基础/数据封装过程.png" alt="数据封装过程"></p>
+<h3 id="三、TCP-IP协议三次握手四次断开"><a href="#三、TCP-IP协议三次握手四次断开" class="headerlink" title="三、TCP/IP协议三次握手四次断开"></a>三、TCP/IP协议三次握手四次断开</h3><h4 id="1-了解相关名词"><a href="#1-了解相关名词" class="headerlink" title="1. 了解相关名词"></a>1. 了解相关名词</h4><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">序列号：Seq序号，占<span class="number">32</span>位，用来标识从TCP源端向目的端发送的字节流，发起方发送数据时对此进行标记。</span><br><span class="line">确认序号：Ack序号，占<span class="number">32</span>位，只有ACK标志位为<span class="number">1</span>时，确认序号字段才有效，Ack=Seq+<span class="number">1</span>。</span><br><span class="line"></span><br><span class="line">常见的标志位：</span><br><span class="line">	ACK：确认序号有效。</span><br><span class="line">	SYN：发起一个新连接。</span><br><span class="line">	FIN：释放一个连接。</span><br></pre></td></tr></table></figure>
+<h4 id="2-了解netstat中的网络状态"><a href="#2-了解netstat中的网络状态" class="headerlink" title="2. 了解netstat中的网络状态"></a>2. 了解netstat中的网络状态</h4><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">CLOSED			初始（无连接）状态。</span><br><span class="line">LISTEN			侦听状态，等待远程机器的连接请求。</span><br><span class="line">SYN_SEND</span><br><span class="line">在TCP三次握手中，主动连接端发送了SYN包后，进入SYN_SEND状态，等待对方的ACK包。</span><br><span class="line">SYN_RECV </span><br><span class="line">在TCP三次握手中，主动连接端收到SYN包后，进入SYN_RECV状态。</span><br><span class="line">ESTABLISHED </span><br><span class="line">完成TCP三次握手后，主动连接端进入ESTABLISHED状态。此时，TCP连接已经建立，可以进行通信。</span><br><span class="line"></span><br><span class="line">FIN_WAIT_1 		在TCP四次断开时，主动关闭端发送FIN包后，进入FIN_WAIT_1状态。</span><br><span class="line">FIN_WAIT_2		在TCP四次断开时，主动关闭端收到ACK包后，进入FIN_WAIT_2状态。</span><br><span class="line">TIME_WAIT 		在TCP四次断开时，主动关闭端发送了ACK包之后，进入TIME_WAIT状态。</span><br><span class="line">CLOSE_WAIT 		在TCP四次断开时，被动关闭端收到FIN包后，进入CLOSE_WAIT状态。</span><br><span class="line">LAST_ACK 	在TCP四次断开时，被动关闭端发送FIN包后，进入LAST_ACK状态，等待对方的ACK包。</span><br></pre></td></tr></table></figure>
+<h4 id="3-TCP-IP三次握手"><a href="#3-TCP-IP三次握手" class="headerlink" title="3. TCP/IP三次握手"></a>3. TCP/IP三次握手</h4><p><img src="/2018/09/12/网络基础/tcp-三次握手.png" alt="tcp-三次握手"></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">TCP三次握手的过程如下：</span><br><span class="line"><span class="number">1</span>. 客户机A端（主动连接端）发送一个SYN包给服务器B端（被动连接端）；</span><br><span class="line"><span class="number">2</span>. 服务器B端（被动连接端）收到SYN包后，发送一个带ACK和SYN标志的包给客户机A端（主动连接端）；</span><br><span class="line"><span class="number">3</span>. 客户机A端（主动连接端）发送一个带ACK标志的包给服务器B端（被动连接端），握手动作完成。</span><br></pre></td></tr></table></figure>
+<h4 id="3-TCP-IP四次断开"><a href="#3-TCP-IP四次断开" class="headerlink" title="3. TCP/IP四次断开"></a>3. TCP/IP四次断开</h4><p><img src="/2018/09/12/网络基础/D:/blog\source\_posts\网络基础\tcp-四次断开.png" alt="tcp-四次断开"></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">TCP四次断开的过程如下：</span><br><span class="line"><span class="number">1</span>. 客户机A端（主动连接端）发送一个FIN包给服务器B端（被动连接端）请求断开连接；</span><br><span class="line"><span class="number">2</span>. 服务器B端（被动连接端）收到FIN包后，发送一个ACK包给客户机A端（主动连接端）；</span><br><span class="line"><span class="number">3</span>. 服务器B端（被动连接端）发送了ACK包后，再发送一个FIN包给客户机A端（主动连接端）确认断开；</span><br><span class="line"><span class="number">4</span>. 客户机A端（主动连接端）收到FIN包后，发送一个ACK包，当服务器B端（被动连接端）收到ACK包后，四次断开动作完成，连接断开。</span><br></pre></td></tr></table></figure>
+<h3 id="注解："><a href="#注解：" class="headerlink" title="注解："></a>注解：</h3>
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://www.bro-camper.top">Camper</a>
+            <p>原文链接: <a href="http://www.bro-camper.top/2018/09/12/网络基础/">http://www.bro-camper.top/2018/09/12/网络基础/</a>
+            <p>发表日期: <a href="http://www.bro-camper.top/2018/09/12/网络基础/">September 12th 2018, 10:53:49 pm</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/09/12/iptables简单入门/" title= iptables简单入门 >
+                    <div class="prevTitle">iptables简单入门</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:Bro-camper@outlook.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="http://github.com/Bro-camper" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/wechat.png" />
+                </span>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title=qq>
+                  
+                  <img class="profile-qr" src="/assets/qq.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo 
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>  -->
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#网络的基础知识"><span class="toc-number">1.</span> <span class="toc-text">网络的基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#课程目标："><span class="toc-number">1.1.</span> <span class="toc-text">课程目标：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一、OSI七层模型"><span class="toc-number">1.2.</span> <span class="toc-text">一、OSI七层模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-什么是OSI模型"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. 什么是OSI模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-OSI的七层介绍"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. OSI的七层介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-1-应用层"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">2.1 应用层</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-表示层"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">2.2 表示层</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-3-会话层"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">2.3 会话层</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-4-传输层"><span class="toc-number">1.2.2.4.</span> <span class="toc-text">2.4 传输层</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-5-网络层"><span class="toc-number">1.2.2.5.</span> <span class="toc-text">2.5 网络层</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-6-数据链路层"><span class="toc-number">1.2.2.6.</span> <span class="toc-text">2.6 数据链路层</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-7-物理层"><span class="toc-number">1.2.2.7.</span> <span class="toc-text">2.7 物理层</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-总结"><span class="toc-number">1.2.3.</span> <span class="toc-text">3. 总结</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、TCP-IP协议模型"><span class="toc-number">1.3.</span> <span class="toc-text">二、TCP/IP协议模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-什么是TCP-IP模型"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 什么是TCP/IP模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-TCP-IP的分层结构"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. TCP/IP的分层结构</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-1-链路层"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">2.1 链路层</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-网络层"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">2.2 网络层</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-3-运输层"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">2.3 运输层</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-4-应用层"><span class="toc-number">1.3.2.4.</span> <span class="toc-text">2.4 应用层</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-数据封装过程"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 数据封装过程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、TCP-IP协议三次握手四次断开"><span class="toc-number">1.4.</span> <span class="toc-text">三、TCP/IP协议三次握手四次断开</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-了解相关名词"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. 了解相关名词</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-了解netstat中的网络状态"><span class="toc-number">1.4.2.</span> <span class="toc-text">2. 了解netstat中的网络状态</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-TCP-IP三次握手"><span class="toc-number">1.4.3.</span> <span class="toc-text">3. TCP/IP三次握手</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-TCP-IP四次断开"><span class="toc-number">1.4.4.</span> <span class="toc-text">3. TCP/IP四次断开</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注解："><span class="toc-number">1.5.</span> <span class="toc-text">注解：</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 5
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span><a class="archive-post-title" href= "/2018/09/12/网络基础/" >网络基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span><a class="archive-post-title" href= "/2018/09/12/iptables简单入门/" >iptables简单入门</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span><a class="archive-post-title" href= "/2018/09/12/持续集成-gitlab/" >持续集成-gitlab</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span><a class="archive-post-title" href= "/2018/09/12/tomcat性能优化/" >tomcat性能优化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span><a class="archive-post-title" href= "/2018/09/12/持续集成-jenkins（上）/" >持续集成-jenkins（上）</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Camper"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
