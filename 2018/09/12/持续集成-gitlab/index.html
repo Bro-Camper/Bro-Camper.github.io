@@ -15,7 +15,7 @@
     <meta name="description" content="">
     <meta name="Cache-Control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>tomcat性能优化 · Camper&#39;s Blog</title>
+    <title>持续集成-gitlab · Camper&#39;s Blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -210,7 +210,7 @@
                 <a href="/" >Camper&#39;s Blog.</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">tomcat性能优化</a>
+                <a href="#" class="post-name">持续集成-gitlab</a>
             </div>
     </div>
     
@@ -242,7 +242,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            tomcat性能优化
+            持续集成-gitlab
             <!-- 404 -->
             
         </h1>
@@ -261,7 +261,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">902</span> / Reading time: <span class="post-count">4 min</span></span>
+                        <span>Word count: <span class="post-count">1,589</span> / Reading time: <span class="post-count">6 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -390,81 +390,67 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h2 id="一-Tomcat简介"><a href="#一-Tomcat简介" class="headerlink" title="一. Tomcat简介"></a>一. Tomcat简介</h2><p>Tomcat是Apache软件基金会（Apache Software Foundation）的Jakarta 项目中的一个核心项目，由Apache、Sun和其他一些公司及个人共同开发而成。</p>
-<p>Tomcat服务器是一个免费的开放源代码的Web应用服务器，属于轻量级应用服务器，在中小型系统和并发访问用户不是很多的场合下被普遍使用，是开发和调试JSP程序的首选。</p>
-<p>Tomcat和Nginx、Apache(httpd)、lighttpd等Web服务器一样，具有处理HTML页面的功能，另外它还是一个Servlet和JSP容器，独立的Servlet容器是Tomcat的默认模式。不过，Tomcat处理静态HTML的能力不如Nginx/Apache服务器。</p>
-<h2 id="二-优化思路"><a href="#二-优化思路" class="headerlink" title="二. 优化思路"></a>二. 优化思路</h2><h3 id="1-网络优化"><a href="#1-网络优化" class="headerlink" title="1.网络优化"></a>1.网络优化</h3><h5 id="1-1、非阻塞，Tomcat8已经取消BIO"><a href="#1-1、非阻塞，Tomcat8已经取消BIO" class="headerlink" title="1.1、非阻塞，Tomcat8已经取消BIO"></a>1.1、非阻塞，Tomcat8已经取消BIO</h5><p>tomcat的运行模式有3种：</p>
-<p><strong>bio：</strong><br>默认的模式,性能非常低下,没有经过任何优化处理和支持.</p>
-<p><strong>nio：</strong><br>nio(new I/O)，是Java SE 1.4及后续版本提供的一种新的I/O操作方式(即java.nio包及其子包)。Java nio是一个基于缓冲区、并能提供非阻塞I/O操作的Java API，因此nio也被看成是non-blocking I/O的缩写。它拥有比传统I/O操作(bio)更好的并发运行性能。</p>
-<p><strong>apr：</strong><br>安装起来最困难,但是从操作系统级别来解决异步的IO问题,大幅度的提高性能.</p>
-<p><strong>启动NIO模式</strong></p>
-<p>修改server.xml里的Connector节点,修改protocol为org.apache.coyote.http11.Http11NioProtocol</p>
-<p><img src="/2018/09/12/tomcat性能优化/1.jpg" alt="avatar"></p>
-<p><img src="/2018/09/12/tomcat性能优化/2.jpg" alt="avatar"></p>
-<h5 id="1-2、启用压缩，消耗CPU，减小网络传输大小"><a href="#1-2、启用压缩，消耗CPU，减小网络传输大小" class="headerlink" title="1.2、启用压缩，消耗CPU，减小网络传输大小"></a>1.2、启用压缩，消耗CPU，减小网络传输大小</h5><p>修改配置文件server.xml</p>
-<ul>
-<li>compression=”on” 打开压缩功能 </li>
-<li>compressionMinSize=”50” 启用压缩的输出内容大小，默认为2KB </li>
-<li>noCompressionUserAgents=”gozilla, traviata” 对于以下的浏览器，不启用压缩 </li>
-<li>compressableMimeType=”text/html,text/xml,text/javascript,text/css,text/plain”　哪些资源类型需要压缩</li>
+        <h3 id="gitlab私有服务器"><a href="#gitlab私有服务器" class="headerlink" title="gitlab私有服务器"></a>gitlab私有服务器</h3><h4 id="一、gitlab相关概念"><a href="#一、gitlab相关概念" class="headerlink" title="一、gitlab相关概念"></a>一、gitlab相关概念</h4><h5 id="1-1-什么是gitlab"><a href="#1-1-什么是gitlab" class="headerlink" title="1.1 什么是gitlab"></a>1.1 什么是gitlab</h5><p>GitLab 是一个用于仓库管理系统的开源项目。使用<a href="http://baike.baidu.com/view/1531489.htm" target="_blank" rel="noopener">Git</a>作为代码管理工具，并在此基础上搭建起来的web服务。</p>
+<p>可通过Web界面进行访问公开的或者私人项目。它拥有与Github类似的功能，能够浏览源代码，管理缺陷和注释。可以管理团队对仓库的访问，它非常易于浏览提交过的版本并提供一个文件历史库。团队成员可以利用内置的简单聊天程序(Wall)进行交流。它还提供一个代码片段收集功能可以轻松实现代码复用。</p>
+<h5 id="1-2-为什么是gitlab"><a href="#1-2-为什么是gitlab" class="headerlink" title="1.2 为什么是gitlab"></a>1.2 为什么是gitlab</h5><p>分布式版本控制系统根本没有“中央服务器”，每个人的电脑上都是一个完整的版本库，这样，你工作的时候，就不需要联网了，因为版本库就在你自己的电脑上。既然每个人电脑上都有一个完整的版本库，那多个人如何协作呢？比方说你在自己电脑上改了文件A，你的同事也在他的电脑上改了文件A，这时，你们俩之间只需把各自的修改推送给对方，就可以互相看到对方的修改了。</p>
+<p>和集中式版本控制系统相比，分布式版本控制系统的安全性要高很多，因为每个人电脑里都有完整的版本库，某一个人的电脑坏掉了不要紧，随便从其他人那里复制一个就可以了。而集中式版本控制系统的中央服务器要是出了问题，所有人都没法干活了。</p>
+<p>在实际使用分布式版本控制系统的时候，其实很少在两人之间的电脑上推送版本库的修改，因为可能你们俩不在一个局域网内，两台电脑互相访问不了，也可能今天你的同事病了，他的电脑压根没有开机。因此，分布式版本控制系统通常也有一台充当“中央服务器”的电脑，但这个服务器的作用仅仅是用来方便“交换”大家的修改，没有它大家也一样干活，只是交换修改不方便而已。</p>
+<p>而分布式版本控制系统中，gitlab是目前最好的私有化解决方案。</p>
+<h5 id="1-3-gitlab特点"><a href="#1-3-gitlab特点" class="headerlink" title="1.3 gitlab特点"></a>1.3 gitlab特点</h5><ul>
+<li>GitLab免费托管您的(私人)软件项目。</li>
+<li>GitLab是管理Git存储库的平台。</li>
+<li>GitLab提供免费的公共和私人存储库，问题跟踪和维基。</li>
+<li>GitLab是Git之上的一个用户友好的Web界面层，它提高了使用Git的速度。</li>
+<li>GitLab提供了自己的持续集成(CI)系统来管理项目，并提供用户界面以及GitLab的其他功能</li>
+<li>GitLab提供了GitLab Community Edition版本，供用户在他们的代码所在的服务器上进行定位。</li>
+<li>GitLab免费提供无限数量的私人和公共存储库。</li>
+<li>代码片段可以共享项目中的少量代码，而不是共享整个项目。</li>
 </ul>
-<p><img src="/2018/09/12/tomcat性能优化/3.jpg" alt="avatar"></p>
-<h3 id="2-安全优化"><a href="#2-安全优化" class="headerlink" title="2. 安全优化"></a>2. 安全优化</h3><ul>
-<li>降权启动</li>
-<li>telnet管理端口保护</li>
-<li>ajp连接端口保护</li>
-<li>禁用管理端</li>
-</ul>
-<h3 id="3-性能优化"><a href="#3-性能优化" class="headerlink" title="3. 性能优化"></a>3. 性能优化</h3><h5 id="3-1-屏蔽dns查询"><a href="#3-1-屏蔽dns查询" class="headerlink" title="3.1 屏蔽dns查询"></a>3.1 屏蔽dns查询</h5><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">enableLookups=<span class="string">"false"</span></span><br></pre></td></tr></table></figure>
-<ol>
-<li><code>&lt;Connector port=&quot;8081&quot; protocol=&quot;HTTP/1.1&quot;</code></li>
-<li><code>connectionTimeout=&quot;6000&quot; enableLookups=&quot;false&quot; acceptCount=&quot;800&quot;</code></li>
-<li><code>redirectPort=&quot;8443&quot; /&gt;</code></li>
-</ol>
-<h5 id="3-2-JVM性能优化"><a href="#3-2-JVM性能优化" class="headerlink" title="3.2 JVM性能优化"></a>3.2 JVM性能优化</h5><p>Tomcat最吃内存，如果系统资源有限，那就需要进行调优，提高资源使用率。</p>
-<ol>
-<li><p>优化catalina.sh配置文件。在catalina.sh配置文件中添加以下代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JAVA_OPTS=&quot;-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms1024m -Xmx1024m -XX:NewSize=512m -XX:MaxNewSize=512m -XX:PermSize=512m -XX:MaxPermSize=512m</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>server:一定要作为第一个参数，在多个CPU时性能佳</code></p>
-</li>
-<li><p><code>-Xms：初始堆内存Heap大小，使用的最小内存,cpu性能高时此值应设的大一些</code></p>
-</li>
-<li><p><code>-Xmx：初始堆内存heap最大值，使用的最大内存</code></p>
-</li>
-<li><p><code>上面两个值是分配JVM的最小和最大内存，取决于硬件物理内存的大小，建议均设为物理内存的一半。</code></p>
-</li>
-<li><p><code>-XX:PermSize:设定内存的永久保存区域</code></p>
-</li>
-<li><p><code>-XX:MaxPermSize:设定最大内存的永久保存区域</code></p>
-</li>
-<li><p><code>-XX:MaxNewSize:</code></p>
-</li>
-<li><p><code>-Xss 15120 这使得JBoss每增加一个线程（thread)就会立即消耗15M内存，而最佳值应该是128K,默认值好像是512k.</code></p>
-</li>
-<li><p><code>+XX:AggressiveHeap 会使得 Xms没有意义。这个参数让jvm忽略Xmx参数,疯狂地吃完一个G物理内存,再吃尽一个G的swap。</code></p>
-</li>
-<li><p><code>-Xss：每个线程的Stack大小</code></p>
-</li>
-<li><p><code>-verbose:gc 现实垃圾收集信息</code></p>
-</li>
-<li><p><code>-Xloggc:gc.log 指定垃圾收集日志文件</code></p>
-</li>
-<li><p><code>-Xmn：young generation的heap大小，一般设置为Xmx的3、4分之一</code></p>
-</li>
-<li><p><code>-XX:+UseParNewGC ：缩短minor收集的时间</code></p>
-</li>
-<li><p><code>-XX:+UseConcMarkSweepGC ：缩短major收集的时间</code></p>
-</li>
-</ol>
+<h4 id="二、gitlab的部署安装"><a href="#二、gitlab的部署安装" class="headerlink" title="二、gitlab的部署安装"></a>二、gitlab的部署安装</h4><h5 id="2-1-软件环境"><a href="#2-1-软件环境" class="headerlink" title="2.1 软件环境"></a>2.1 软件环境</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CentOS 7.4</span><br></pre></td></tr></table></figure>
+<h5 id="2-2-安装依赖"><a href="#2-2-安装依赖" class="headerlink" title="2.2 安装依赖"></a>2.2 安装依赖</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo yum -y install policycoreutils openssh-server openssh-clients postfix</span><br><span class="line">sudo systemctl enable postfix &amp;&amp; systemctl start postfix</span><br></pre></td></tr></table></figure>
+<h5 id="2-3-下载安装"><a href="#2-3-下载安装" class="headerlink" title="2.3 下载安装"></a>2.3 下载安装</h5><p>配置yum源：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/yum.repos.d/gitlab-ce.repo</span><br><span class="line">[gitlab-ce]</span><br><span class="line">name=Gitlab CE Repository</span><br><span class="line">baseurl=https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el$releasever/</span><br><span class="line">gpgcheck=0</span><br><span class="line">enabled=1</span><br></pre></td></tr></table></figure>
+<p>更新本地yum缓存及安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo yum makecache</span><br><span class="line">sudo yum install -y gitlab-ce</span><br><span class="line">sudo vim /etc/gitlab/gitlab.rb    #更改unicorn端口,在633行</span><br></pre></td></tr></table></figure>
+<p><img src="/2018/09/12/持续集成-gitlab/1.jpg" alt="avatar"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-ctl reconfigure</span><br><span class="line">sudo gitlab-ctl start</span><br></pre></td></tr></table></figure>
+<p>初始化用户及密码</p>
+<p>a、 切换目录：cd /opt/gitlab/bin</p>
+<p>b、执行 ：sudo gitlab-rails console production 命令 开始初始化密码</p>
+<p>c、在irb(main):001:0&gt; 后面通过 u=User.where(id:1).first 来查找与切换账号（User.all 可以查看所有用户） </p>
+<p>d、通过u.password=’12345678’设置密码为12345678(这里的密码看自己喜欢)</p>
+<p>e、通过u.password_confirmation=’12345678’ 再次确认密码</p>
+<p>f、通过 u.save!进行保存（切记切记 后面的 !）</p>
+<p>g、如果看到上面截图中的true ，恭喜你已经成功了，执行 exit 退出当前设置流程即可。</p>
+<p>h、回到gitlab ,可以通过 root/12345678 这一超级管理员账号登录了</p>
+<p><img src="/2018/09/12/持续集成-gitlab/2.jpg" alt="avatar"></p>
+<p>登入成功</p>
+<p><img src="/2018/09/12/持续集成-gitlab/3.jpg" alt="avatar"></p>
+<h5 id="2-4-常用命令"><a href="#2-4-常用命令" class="headerlink" title="2.4 常用命令"></a>2.4 常用命令</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo gitlab-ctl start    # 启动所有 gitlab 组件；</span><br><span class="line">sudo gitlab-ctl stop        # 停止所有 gitlab 组件；</span><br><span class="line">sudo gitlab-ctl restart        # 重启所有 gitlab 组件；</span><br><span class="line">sudo gitlab-ctl status        # 查看服务状态；</span><br><span class="line">sudo gitlab-ctl reconfigure        # 启动服务；</span><br><span class="line">sudo vim /etc/gitlab/gitlab.rb        # 修改默认的配置文件；</span><br><span class="line">gitlab-rake gitlab:check SANITIZE=true --trace    # 检查gitlab；</span><br><span class="line">sudo gitlab-ctl tail        # 查看日志；</span><br></pre></td></tr></table></figure>
+<h4 id="三、配置使用"><a href="#三、配置使用" class="headerlink" title="三、配置使用"></a>三、配置使用</h4><h5 id="1-本地配置"><a href="#1-本地配置" class="headerlink" title="1.本地配置"></a>1.本地配置</h5><p>安装配置git</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo yum -y install git</span><br><span class="line">sudo git config --global user.name &quot;yourname&quot;</span><br><span class="line">sudo git config --global user.email &quot;rayspage@163.com&quot;</span><br></pre></td></tr></table></figure>
+<p>生成ssh秘钥</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ssh-keygen</span><br></pre></td></tr></table></figure>
+<p>一直回车，最后在用户家目录下会出现.ssh 目录，里面包括生成的公钥和秘钥:id_rsa、id_rsa.pub,将.ssh/id_rsa.pub的内容拷贝到gitlab settings中</p>
+<p> <img src="/2018/09/12/持续集成-gitlab/4.jpg" alt="avatar"></p>
+<p>ssh key添加完成后，拉取和推送代码就不需要输入密码，非常便捷。 </p>
+<h5 id="2-本地与gitlab的协同"><a href="#2-本地与gitlab的协同" class="headerlink" title="2. 本地与gitlab的协同"></a>2. 本地与gitlab的协同</h5><p>在gitlab上新建仓库库后，本地如何gitlab进行协同工作？</p>
+<p>一般情况下，本地的工作方式有3种：</p>
+<h5 id="①新建仓库"><a href="#①新建仓库" class="headerlink" title="①新建仓库"></a>①新建仓库</h5><p>本地为空，直接从远程仓库克隆。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git clone http://localhost/camper/first_web.git</span><br><span class="line">cd first_web</span><br><span class="line">touch README.md</span><br><span class="line">git add README.md</span><br><span class="line">git commit -m &quot;add README&quot;</span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
+<h5 id="②文件夹已存在"><a href="#②文件夹已存在" class="headerlink" title="②文件夹已存在"></a>②文件夹已存在</h5><p>如果文件夹已存在，需要将其内容推送到gitlab 远程仓库，本地操作如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd myblog</span><br><span class="line">git init</span><br><span class="line">git remote add origin http://localhost/camper/first_web.git</span><br><span class="line">git add .</span><br><span class="line">git commit -m &quot;Initial commit&quot;</span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
+<h5 id="③Git仓库已存在"><a href="#③Git仓库已存在" class="headerlink" title="③Git仓库已存在"></a>③Git仓库已存在</h5><p>本地已经有一个Git仓库，需要将其推送到刚才创建的gitlab仓库中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd existing_repo</span><br><span class="line">git remote add origin http://localhost/camper_first_web.git</span><br><span class="line">git push -u origin --all</span><br><span class="line">git push -u origin –tags</span><br></pre></td></tr></table></figure>
+<p>首先，将远程gitlab仓库地址添加到本地仓库中，然后将本地仓库的所有分支和tag推送过去。 </p>
 
     </article>
     <!-- license  -->
     
         <div class="license-wrapper">
             <p>原文作者: <a href="http://www.bro-camper.top">Camper</a>
-            <p>原文链接: <a href="http://www.bro-camper.top/2018/09/12/tomcat性能优化/">http://www.bro-camper.top/2018/09/12/tomcat性能优化/</a>
-            <p>发表日期: <a href="http://www.bro-camper.top/2018/09/12/tomcat性能优化/">September 12th 2018, 1:41:23 pm</a>
+            <p>原文链接: <a href="http://www.bro-camper.top/2018/09/12/持续集成-gitlab/">http://www.bro-camper.top/2018/09/12/持续集成-gitlab/</a>
+            <p>发表日期: <a href="http://www.bro-camper.top/2018/09/12/持续集成-gitlab/">September 12th 2018, 2:52:42 pm</a>
             <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -472,17 +458,12 @@ height:50vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2018/09/12/持续集成-gitlab/" title= 持续集成-gitlab >
-                    <div class="nextTitle">持续集成-gitlab</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2018/09/12/持续集成-jenkins（上）/" title= 持续集成-jenkins（上） >
-                    <div class="prevTitle">持续集成-jenkins（上）</div>
+                <a href= "/2018/09/12/tomcat性能优化/" title= tomcat性能优化 >
+                    <div class="prevTitle">tomcat性能优化</div>
                 </a>
             
         </li>
@@ -601,7 +582,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一-Tomcat简介"><span class="toc-number">1.</span> <span class="toc-text">一. Tomcat简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二-优化思路"><span class="toc-number">2.</span> <span class="toc-text">二. 优化思路</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-网络优化"><span class="toc-number">2.1.</span> <span class="toc-text">1.网络优化</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-1、非阻塞，Tomcat8已经取消BIO"><span class="toc-number">2.1.0.1.</span> <span class="toc-text">1.1、非阻塞，Tomcat8已经取消BIO</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-2、启用压缩，消耗CPU，减小网络传输大小"><span class="toc-number">2.1.0.2.</span> <span class="toc-text">1.2、启用压缩，消耗CPU，减小网络传输大小</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-安全优化"><span class="toc-number">2.2.</span> <span class="toc-text">2. 安全优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-性能优化"><span class="toc-number">2.3.</span> <span class="toc-text">3. 性能优化</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-1-屏蔽dns查询"><span class="toc-number">2.3.0.1.</span> <span class="toc-text">3.1 屏蔽dns查询</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-JVM性能优化"><span class="toc-number">2.3.0.2.</span> <span class="toc-text">3.2 JVM性能优化</span></a></li></ol></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#gitlab私有服务器"><span class="toc-number">1.</span> <span class="toc-text">gitlab私有服务器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#一、gitlab相关概念"><span class="toc-number">1.1.</span> <span class="toc-text">一、gitlab相关概念</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-1-什么是gitlab"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1 什么是gitlab</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-2-为什么是gitlab"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2 为什么是gitlab</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-3-gitlab特点"><span class="toc-number">1.1.3.</span> <span class="toc-text">1.3 gitlab特点</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二、gitlab的部署安装"><span class="toc-number">1.2.</span> <span class="toc-text">二、gitlab的部署安装</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-1-软件环境"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 软件环境</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-安装依赖"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2 安装依赖</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-3-下载安装"><span class="toc-number">1.2.3.</span> <span class="toc-text">2.3 下载安装</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-4-常用命令"><span class="toc-number">1.2.4.</span> <span class="toc-text">2.4 常用命令</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三、配置使用"><span class="toc-number">1.3.</span> <span class="toc-text">三、配置使用</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-本地配置"><span class="toc-number">1.3.1.</span> <span class="toc-text">1.本地配置</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-本地与gitlab的协同"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 本地与gitlab的协同</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#①新建仓库"><span class="toc-number">1.3.3.</span> <span class="toc-text">①新建仓库</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#②文件夹已存在"><span class="toc-number">1.3.4.</span> <span class="toc-text">②文件夹已存在</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#③Git仓库已存在"><span class="toc-number">1.3.5.</span> <span class="toc-text">③Git仓库已存在</span></a></li></ol></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
