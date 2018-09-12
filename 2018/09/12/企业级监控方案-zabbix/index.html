@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Camper">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Camper">
+    <meta name="keywords" content="Camper | Camper">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>企业级监控方案--zabbix · Camper&#39;s Blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180709 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180709 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Camper&#39;s Blog.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">企业级监控方案--zabbix</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Camper's Blog.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            企业级监控方案--zabbix
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">3,028</span> / Reading time: <span class="post-count">15 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/09/12</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h3 id="Zabbix监控概述"><a href="#Zabbix监控概述" class="headerlink" title="Zabbix监控概述"></a>Zabbix监控概述</h3><h4 id="一、Zabbix监控系统所监控对象"><a href="#一、Zabbix监控系统所监控对象" class="headerlink" title="一、Zabbix监控系统所监控对象"></a>一、Zabbix监控系统所监控对象</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">数据库：MySQL,MariaDB,Oracle,SQL Server</span><br><span class="line">应用软件: Nginx,Apache,PHP,Tomcat               agent</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">集群:LVS,Keepalived,HAproxy,RHCS,F5</span><br><span class="line">虚拟化:Vmware,KVM,XEN</span><br><span class="line">操作系统:Linux,Unix,Windows性能参数             agent</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">硬件：服务器，存储，网络设备                  IPMI</span><br><span class="line">网络：网络环境（内网环境，外网环境）           SNMP</span><br></pre></td></tr></table></figure>
+<h4 id="二、Zabbix监控方式："><a href="#二、Zabbix监控方式：" class="headerlink" title="二、Zabbix监控方式："></a>二、Zabbix监控方式：</h4><p>主动轮询</p>
+<p>被动获取</p>
+<h4 id="三、Zabbix监控端安装配置"><a href="#三、Zabbix监控端安装配置" class="headerlink" title="三、Zabbix监控端安装配置"></a>三、Zabbix监控端安装配置</h4><h5 id="3-1-帮助文档"><a href="#3-1-帮助文档" class="headerlink" title="3.1 帮助文档"></a>3.1 帮助文档</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.zabbix.com/documentation/3.4</span><br></pre></td></tr></table></figure>
+<h5 id="3-2-部署Zabbix监控端"><a href="#3-2-部署Zabbix监控端" class="headerlink" title="3.2 部署Zabbix监控端"></a>3.2 部署Zabbix监控端</h5><h6 id="3-2-1监控端服务包安装"><a href="#3-2-1监控端服务包安装" class="headerlink" title="3.2.1监控端服务包安装"></a>3.2.1监控端服务包安装</h6><p>安装源码库配置部署包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh http://repo.zabbix.com/zabbix/3.4/rhel/7/x86_64/zabbix-release-3.4-1.el7.centos.noarch.rpm</span><br></pre></td></tr></table></figure>
+<p>安装Zabbix部署包。以下是使用Mysql数据库安装Zabbix server、WEB前端的示例 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install zabbix-server-mysql zabbix-web-mysql   #zabbix-get 用于手动获取被监控端信息，测试使用</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install zabbix-agent #需要监控本机可以安装，如不需要监控本机，可不安装！！！</span><br></pre></td></tr></table></figure>
+<p>数据库创建  </p>
+<p>说明：Zabbix数据库必须在Zabbix服务器和代理安装的时候创建</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@zabbix_server ~]# yum -y install mariadb mariadb-server</span><br><span class="line">[root@zabbix_server ~]# systemctl start mariadb</span><br><span class="line">[root@zabbix_server ~]# systemctl enable mariadb</span><br><span class="line">[root@zabbix_server ~]# mysqladmin -uroot password &quot;123456&quot;</span><br><span class="line">[root@zabbix_server ~]# mysql -uroot -p&lt;password&gt;</span><br><span class="line">MariaDB [(none)]&gt; create database zabbix character set utf8 collate utf8_bin;</span><br><span class="line">MariaDB [(none)]&gt; grant all privileges on zabbix.* to zabbix@localhost identified by &apos;&lt;password&gt;&apos;;</span><br><span class="line">MariaDB [(none)]&gt; quit;</span><br></pre></td></tr></table></figure>
+<p>以下说明：单个导入时使用，强调proxy导入数据库情况，本实例按“导入初始架构（Schema）和数据”部分操作。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@zabbix_server ~]# cd database/mysql</span><br><span class="line">[root@zabbix_server ~]# mysql -uzabbix -p&lt;password&gt; zabbix &lt; schema.sql</span><br><span class="line"># stop here if you are creating database for Zabbix proxy</span><br><span class="line">[root@zabbix_server ~]# mysql -uzabbix -p&lt;password&gt; zabbix &lt; images.sql</span><br><span class="line">[root@zabbix_server ~]# mysql -uzabbix -p&lt;password&gt; zabbix &lt; data.sql</span><br></pre></td></tr></table></figure>
+<p>导入初始架构（Schema）和数据 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@zabbix_server ~]# cd /usr/share/doc/zabbix-server-mysql-3.4.0</span><br><span class="line">[root@zabbix_server ~]# zcat create.sql.gz | mysql -uroot -psmartgo zabbix #-D 指定数据库亦可</span><br></pre></td></tr></table></figure>
+<p> 启动Zabbix Server进程</p>
+<p> 在zabbix_server.conf中编辑数据库配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@zabbix_server ~]# vim /etc/zabbix/zabbix_server.conf</span><br><span class="line">  DBHost=localhost</span><br><span class="line">  DBName=zabbix</span><br><span class="line">  DBUser=zabbix</span><br><span class="line">  DBPassword=zabbix</span><br></pre></td></tr></table></figure>
+<p>验证修改后:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@zabbix_server ~]#more /etc/zabbix/zabbix_server.conf | grep -v &quot;#&quot; | grep -v &quot;^$&quot;</span><br></pre></td></tr></table></figure>
+<p>编辑Zabbix前端的PHP配置 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Zabbix前端的Apache配置文件位于 /etc/httpd/conf.d/zabbix.conf 。一些PHP设置已经完成了配置。</span><br><span class="line"> php_value max_execution_time 300</span><br><span class="line"> php_value memory_limit 128M</span><br><span class="line"> php_value post_max_size 16M</span><br><span class="line"> php_value upload_max_filesize 2M</span><br><span class="line"> php_value max_input_time 300</span><br><span class="line"> php_value always_populate_raw_post_data -1</span><br><span class="line"> # php_value date.timezone Europe/Riga #Asia/Shanghai</span><br></pre></td></tr></table></figure>
+<p>说明：   </p>
+<p>依据所在时区，你可以取消“date.timezone” 设置的注释，并正确配置它。在配置文件更改后，需要重启Apache Web服务器</p>
+<p>启动Zabbix Server进程 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@zabbix_server ~]#systemctl start zabbix-server</span><br><span class="line">[root@zabbix_server ~]#systemctl enable zabbix-server</span><br></pre></td></tr></table></figure>
+<p>重启mariadb</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@zabbix_server ~]#systemctl restart mysqld</span><br><span class="line">[root@zabbix_server ~]#systemctl enable mysqld</span><br></pre></td></tr></table></figure>
+<p>启动httpd进程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@zabbix_server ~]systemctl start httpd</span><br><span class="line">[root@zabbix_server ~]systemctl enable httpd</span><br></pre></td></tr></table></figure>
+<p>访问 ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Zabbix前端可以在浏览器中通过 http://zabbix-frontend-hostname/zabbix 进行访问。默认的用户名／密码为 Admin/zabbix。</span><br></pre></td></tr></table></figure>
+<h4 id="四、Zabbix-agent部署"><a href="#四、Zabbix-agent部署" class="headerlink" title="四、Zabbix-agent部署"></a>四、Zabbix-agent部署</h4><p>安装源码库配置部署包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@zabbix_web1 ~]#rpm -ivh http://repo.zabbix.com/zabbix/3.4/rhel/7/x86_64/zabbix-release-3.4-1.el7.centos.noarch.rpm</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@zabbix_web1 ~]#yum -y install zabbix-agent</span><br><span class="line">  </span><br><span class="line">[root@zabbix_web1 ~]#vim /etc/zabbix/zabbix_agentd.conf</span><br><span class="line">  Server=192.168.1.1,192.168.1.2 #为zabbix监控端ip，被动模式</span><br><span class="line">  ServerActive=192.168.1.1,192.168.1.2 #为zabbix监控端ip，主动模式</span><br><span class="line">  Hostname=zabbix_web1 #为被监控端主机名，建设使用$HOSTNAME</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@zabbix_web1 ~]#systemctl start zabbix-agent</span><br><span class="line">[root@zabbix_web1 ~]#systemctl enable zabbix-agent</span><br><span class="line">[root@zabbix_web1 ~]#ss -anptul | grep :10050</span><br></pre></td></tr></table></figure>
+<h4 id="五、Zabbix监控端测试"><a href="#五、Zabbix监控端测试" class="headerlink" title="五、Zabbix监控端测试"></a>五、Zabbix监控端测试</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@zabbix_server ~]#zabbix_get -s 192.168.208.130 -k system.uname</span><br><span class="line">[root@zabbix_server ~]#zabbix_get -s 192.168.208.130 -k system.cpu.load</span><br><span class="line">[root@zabbix_server ~]#zabbix_get -s 192.168.208.130 -k system.cpu.load[all,avg1]</span><br><span class="line">[root@zabbix_server ~]#zabbix_get -s 192.168.208.130 -k system.cpu.load[all,avg5]</span><br><span class="line">[root@zabbix_server ~]#zabbix_get -s 192.168.208.130 -k system.cpu.load[all,avg15]</span><br><span class="line">[root@zabbix_server ~]#zabbix_get -s 192.168.208.130 -k net.tcp.service[http] #开启为1，未开启为0</span><br><span class="line">[root@zabbix_server ~]#zabbix_get -s 192.168.208.130 -k net.tcp.service[ssh]</span><br><span class="line">[root@zabbix_server ~]#zabbix_get -s 192.168.208.130 -k net.if.total[ens33]</span><br></pre></td></tr></table></figure>
+<h4 id="六、登录zabbix监控平台"><a href="#六、登录zabbix监控平台" class="headerlink" title="六、登录zabbix监控平台"></a>六、登录zabbix监控平台</h4><p><img src="/2018/09/12/企业级监控方案-zabbix/1.png" alt="登录界面"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/2.png" alt="dashboard"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/3.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/4.png" alt="avatar"></p>
+<h4 id="七、监控配置"><a href="#七、监控配置" class="headerlink" title="七、监控配置"></a>七、监控配置</h4><p>解决图形乱码问题 ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@zabbix-server ~]# yum -y install wqy-microhei-fonts</span><br><span class="line">[root@zabbix-server ~]# cp /usr/share/fonts/wqy-microhei/wqy-microhei.ttc /usr/share/fonts/dejavu/DejaVuSans.ttf</span><br></pre></td></tr></table></figure>
+<h5 id="7-1-添加监控主机"><a href="#7-1-添加监控主机" class="headerlink" title="7.1 添加监控主机"></a>7.1 添加监控主机</h5><p><img src="/2018/09/12/企业级监控方案-zabbix/5.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/6.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/7.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/8.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/9.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/10.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/11.png" alt="avatar"></p>
+<h4 id="八、使用监控模板进行监控操作"><a href="#八、使用监控模板进行监控操作" class="headerlink" title="八、使用监控模板进行监控操作"></a>八、使用监控模板进行监控操作</h4><p><img src="/2018/09/12/企业级监控方案-zabbix/8.1.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/8.2.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/8.3.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/8.4.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/8.5.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/8.6.png" alt="avatar"></p>
+<p>九、监控仪表板 </p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/9.1.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/9.2.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/9.3.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/9.4.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/9.5.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/9.6.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/9.7.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/9.8.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/9.9.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/9.10.png" alt="avatar"></p>
+<p>注意：一定要点击右上角保存设置。</p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/9.11.png" alt="avatar"></p>
+<h4 id="十、添加新被监控主机（创建应用集、监控项等）"><a href="#十、添加新被监控主机（创建应用集、监控项等）" class="headerlink" title="十、添加新被监控主机（创建应用集、监控项等）"></a>十、添加新被监控主机（创建应用集、监控项等）</h4><h5 id="10-1-添加应用集"><a href="#10-1-添加应用集" class="headerlink" title="10.1 添加应用集"></a>10.1 添加应用集</h5><p><img src="/2018/09/12/企业级监控方案-zabbix/10.1.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/10.2.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/10.3.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/10.4.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/10.5.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/10.6.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/10.7.png" alt="avatar"></p>
+<h5 id="10-2-添加监控项"><a href="#10-2-添加监控项" class="headerlink" title="10.2 添加监控项"></a>10.2 添加监控项</h5><p><img src="/2018/09/12/企业级监控方案-zabbix/11.1.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/11.2.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/11.3.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/11.4.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/11.5.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/11.6.png" alt="avatar"></p>
+<h5 id="10-3-添加触发器"><a href="#10-3-添加触发器" class="headerlink" title="10.3 添加触发器"></a>10.3 添加触发器</h5><p><img src="/2018/09/12/企业级监控方案-zabbix/12.1.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/12.2.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/12.3.png" alt="avatar"></p>
+<h5 id="10-4-添加图形"><a href="#10-4-添加图形" class="headerlink" title="10.4 添加图形"></a>10.4 添加图形</h5><p><img src="/2018/09/12/企业级监控方案-zabbix/13.1.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/13.2.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/13.3.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/13.4.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/13.5.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/13.6.png" alt="avatar"></p>
+<h5 id="10-5-添加聚合图形"><a href="#10-5-添加聚合图形" class="headerlink" title="10.5 添加聚合图形"></a>10.5 添加聚合图形</h5><p><img src="/2018/09/12/企业级监控方案-zabbix/14.1.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/14.2.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/14.3.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/14.4.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/14.5.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/14.6.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/14.7.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/14.8.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/14.9.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/14.10.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/14.11.png" alt="avatar"></p>
+<h5 id="10-6-添加监控系统收集到被监控主机的监控数据"><a href="#10-6-添加监控系统收集到被监控主机的监控数据" class="headerlink" title="10.6 添加监控系统收集到被监控主机的监控数据"></a>10.6 添加监控系统收集到被监控主机的监控数据</h5><p><img src="/2018/09/12/企业级监控方案-zabbix/15.1.png" alt="avatar"></p>
+<h4 id="十一、被监控主机自动注册"><a href="#十一、被监控主机自动注册" class="headerlink" title="十一、被监控主机自动注册"></a>十一、被监控主机自动注册</h4><p>1、修改监控主机/etc/hosts </p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/15.2.png" alt="avatar"></p>
+<p>2、被监控主机安装zabbix-agent</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@web3 ~]# yum -y install zabbix-agent</span><br></pre></td></tr></table></figure>
+<p>3、修改/etc/zabbix/zabbix-agentd.conf 配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">97 Server=192.168.208.149</span><br><span class="line">138 ServerActive=192.168.208.149</span><br><span class="line">149 Hostname=web3</span><br><span class="line">157 HostnameItem=system.hostname</span><br><span class="line">179 HostMetadataItem=system.uname</span><br></pre></td></tr></table></figure>
+<p>4、启动zabbix-agent</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@web3 ~]# systemctl start zabbix-agent</span><br><span class="line">[root@web3 ~]# systemctl enable zabbix-agent</span><br></pre></td></tr></table></figure>
+<p>5、zabbix监控平台添加自动注册</p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/16.1.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/16.2.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/16.3.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/16.4.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/16.5.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/16.6.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/16.7.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/16.8.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/16.9.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/16.10.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/16.11.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/16.12.png" alt="avatar"></p>
+<h4 id="十二、http监控"><a href="#十二、http监控" class="headerlink" title="十二、http监控"></a>十二、http监控</h4><h5 id="1、Apache-httpd-状态监控"><a href="#1、Apache-httpd-状态监控" class="headerlink" title="1、Apache httpd 状态监控"></a>1、Apache httpd 状态监控</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@zabbix_server ~]#yum -y install httpd</span><br><span class="line">[root@zabbix_server ~]#systemctl start httpd</span><br><span class="line">[root@zabbix_server ~]#systemctl enable httpd</span><br></pre></td></tr></table></figure>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/17.1.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/17.2.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/17.3.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/17.4.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/17.5.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/17.6.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/17.7.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/17.8.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/17.9.png" alt="avatar"></p>
+<h5 id="2、Apache-httpd访问监控"><a href="#2、Apache-httpd访问监控" class="headerlink" title="2、Apache httpd访问监控"></a>2、Apache httpd访问监控</h5><h6 id="2-1-Apache-httpd状态获取方法"><a href="#2-1-Apache-httpd状态获取方法" class="headerlink" title="2.1 Apache httpd状态获取方法"></a>2.1 Apache httpd状态获取方法</h6><p>对Apache httpd组件进行监控主要依靠以下两个模块：</p>
+<p>mod_status模块：主要输出Apache当前的连接状态，通过设置ExtendedStatus On可以输出更完整详细的内容。</p>
+<p>mod_info模块：主要输出Apache所有运行状态的完整输出，包括配置文件等，有点类似于phpinfo的效果。</p>
+<p>在被监控主机<strong>/</strong>etc<strong>/</strong>httpd<strong>/</strong>conf.d<strong>/</strong>zabbix_apache_status.conf文件中添加如下内容： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;Location /server-status&gt;</span><br><span class="line">    SetHandler server-status</span><br><span class="line">    Order deny,allow</span><br><span class="line">    Deny from all</span><br><span class="line">    Allow from 192.168.208.149/255.255.255.0</span><br><span class="line">&lt;/Location&gt;</span><br><span class="line">ExtendedStatus On</span><br><span class="line">&lt;Location /server-info&gt;</span><br><span class="line">    SetHandler server-info</span><br><span class="line">    Order deny,allow</span><br><span class="line">    Deny from all</span><br><span class="line">    Allow from 192.168.208.149/255.255.255.0</span><br><span class="line">&lt;/Location&gt;</span><br></pre></td></tr></table></figure>
+<p>注：192<strong>.</strong>168<strong>.</strong>208<strong>.</strong>149为监控主机IP地址。 </p>
+<h6 id="2-2-监控主机访问"><a href="#2-2-监控主机访问" class="headerlink" title="2.2 监控主机访问"></a>2.2 监控主机访问</h6><p><a href="http://web1/server-status" target="_blank" rel="noopener">http://web1/server-status</a></p>
+<p><a href="http://web1/server-info" target="_blank" rel="noopener">http://web1/server-info</a></p>
+<h6 id="2-3-监控主机下载监控脚本及模块"><a href="#2-3-监控主机下载监控脚本及模块" class="headerlink" title="2.3 监控主机下载监控脚本及模块"></a>2.3 监控主机下载监控脚本及模块</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@zabbix-server ~]# git clone https://github.com/lorf/zapache</span><br></pre></td></tr></table></figure>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/18.1.png" alt="avatar"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@zabbix-server zapache]# scp userparameter_zapache.conf.sample web1:/etc/zabbix/zabbix_agentd.d/userparameter_zapache.conf</span><br><span class="line">[root@zabbix-server zapache]# scp zapache web1:/usr/bin/</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@web1 ~]# vim /etc/zabbix/zabbix_agentd.d/userparameter_zapache.conf</span><br><span class="line">UserParameter=zapache[*],/usr/bin/zapache \$1</span><br></pre></td></tr></table></figure>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/18.2.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/18.3.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/18.4.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/18.5.png" alt="avatar"></p>
+<p>以上配置容易出现模块无法应用的情况。</p>
+<h5 id="3、Nginx访问监控"><a href="#3、Nginx访问监控" class="headerlink" title="3、Nginx访问监控"></a>3、Nginx访问监控</h5><h6 id="3-1-被监控端安装nginx"><a href="#3-1-被监控端安装nginx" class="headerlink" title="3.1 被监控端安装nginx"></a>3.1 被监控端安装nginx</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@web1 ~]# yum -y install epel-release</span><br><span class="line">[root@web1 ~]# yum -y install nginx</span><br></pre></td></tr></table></figure>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/19.1.png" alt="avatar"></p>
+<h6 id="3-2查看被监控端nginx状态模块文件是否安装"><a href="#3-2查看被监控端nginx状态模块文件是否安装" class="headerlink" title="3.2查看被监控端nginx状态模块文件是否安装"></a>3.2查看被监控端nginx状态模块文件是否安装</h6><p><img src="/2018/09/12/企业级监控方案-zabbix/19.2.png" alt="avatar"></p>
+<h6 id="3-3-修改被监控主机nginx配置文件"><a href="#3-3-修改被监控主机nginx配置文件" class="headerlink" title="3.3 修改被监控主机nginx配置文件"></a>3.3 修改被监控主机nginx配置文件</h6><p>在nginx的配置文件中，添加status配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location /nginx_status &#123;</span><br><span class="line">               stub_status on;</span><br><span class="line">               access_log off;</span><br><span class="line">               allow 127.0.0.1;</span><br><span class="line">               allow 192.168.208.149;   //zabbix服务器的IP地址，一般是内网地址  </span><br><span class="line">               deny all;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+<p>​    在虚拟主机 server {} 中加入上面配置，也可以单独定义一个专门用于监控的虚拟主机。</p>
+<p>​    deny all , 拒绝除 allow 中的主机之外所有主机访问此 URL ，实现过程中如果遇到 403 ，有可能是你把自己测试的机器拒绝了。</p>
+<h6 id="3-4-在监控主机访问nginx状态文件"><a href="#3-4-在监控主机访问nginx状态文件" class="headerlink" title="3.4 在监控主机访问nginx状态文件"></a>3.4 在监控主机访问nginx状态文件</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">重新加载nginx后访问：http://web1/nginx_status</span><br></pre></td></tr></table></figure>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/19.3.png" alt="avatar"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">nginx Status 详细说明：</span><br><span class="line"></span><br><span class="line">Activeconnections:对后端发起的活动连接数；</span><br><span class="line"></span><br><span class="line">server accepts 1：nginx 总共处理了1个连接；</span><br><span class="line"></span><br><span class="line">handled：成功创建了1次握手；</span><br><span class="line"></span><br><span class="line">requests：总共处理了2请求。</span><br><span class="line"></span><br><span class="line">Reading：nginx读取客户端的header数；</span><br><span class="line"></span><br><span class="line">Writing: nginx 返回给客户端的header数；</span><br><span class="line"></span><br><span class="line">Waiting: nginx 请求处理完成，正在等待下一请求指令的连接。</span><br></pre></td></tr></table></figure>
+<p>在访问效率很高，请求很快被处理完毕的情况下，Waiting 数比较多是正常的。如果 reading + writing 数较多，则说明并发访问量很大，正在处理过程中。</p>
+<h6 id="3-5-被监控编写监控脚本"><a href="#3-5-被监控编写监控脚本" class="headerlink" title="3.5 被监控编写监控脚本"></a>3.5 被监控编写监控脚本</h6><p>保存文件为:/etc/zabbix/zabbix_agentd.d/zabbix_nginx_status.sh </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">#Script to fetch nginx statuses for monitoring systems</span><br><span class="line">#</span><br><span class="line">    HOST=&quot;127.0.0.1&quot;</span><br><span class="line">    PORT=&quot;80&quot;</span><br><span class="line"></span><br><span class="line">    function ping &#123;</span><br><span class="line">        /sbin/pidof nginx | wc -l</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function active &#123;</span><br><span class="line">        /usr/bin/curl &quot;http://$HOST:$PORT/nginx_status/&quot; 2&gt;/dev/null| grep &apos;Active&apos; | awk &apos;&#123;print $NF&#125;&apos;</span><br><span class="line">    &#125;</span><br><span class="line">    function reading &#123;</span><br><span class="line">        /usr/bin/curl &quot;http://$HOST:$PORT/nginx_status/&quot; 2&gt;/dev/null| grep &apos;Reading&apos; | awk &apos;&#123;print $2&#125;&apos;</span><br><span class="line">    &#125;</span><br><span class="line">    function writing &#123;</span><br><span class="line">        /usr/bin/curl &quot;http://$HOST:$PORT/nginx_status/&quot; 2&gt;/dev/null| grep &apos;Writing&apos; | awk &apos;&#123;print $4&#125;&apos;</span><br><span class="line">    &#125;</span><br><span class="line">    function waiting &#123;</span><br><span class="line">        /usr/bin/curl &quot;http://$HOST:$PORT/nginx_status/&quot; 2&gt;/dev/null| grep &apos;Waiting&apos; | awk &apos;&#123;print $6&#125;&apos;</span><br><span class="line">    &#125;</span><br><span class="line">    function accepts &#123;</span><br><span class="line">        /usr/bin/curl &quot;http://$HOST:$PORT/nginx_status/&quot; 2&gt;/dev/null| awk NR==3 | awk &apos;&#123;print $1&#125;&apos;</span><br><span class="line">    &#125;</span><br><span class="line">    function handled &#123;</span><br><span class="line">        /usr/bin/curl &quot;http://$HOST:$PORT/nginx_status/&quot; 2&gt;/dev/null| awk NR==3 | awk &apos;&#123;print $2&#125;&apos;</span><br><span class="line">    &#125;</span><br><span class="line">    function requests &#123;</span><br><span class="line">        /usr/bin/curl &quot;http://$HOST:$PORT/nginx_status/&quot; 2&gt;/dev/null| awk NR==3 | awk &apos;&#123;print $3&#125;&apos;</span><br><span class="line">    &#125;</span><br><span class="line">    $1</span><br></pre></td></tr></table></figure>
+<h6 id="3-6-创建zabbix-agent片段配置文件"><a href="#3-6-创建zabbix-agent片段配置文件" class="headerlink" title="3.6 创建zabbix_agent片段配置文件"></a>3.6 创建zabbix_agent片段配置文件</h6><p>文件为：/etc/zabbix/zabbix_agentd.d/zabbix_nginx_status.conf </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UserParameter=nginx.status[*],/etc/zabbix/zabbix_agentd.d/zabbix_nginx_status.sh $1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@web1 zabbix_agentd.d]# systemctl restart zabbix-agent</span><br></pre></td></tr></table></figure>
+<h6 id="3-7-重启zabbix-agent"><a href="#3-7-重启zabbix-agent" class="headerlink" title="3.7 重启zabbix-agent"></a>3.7 重启zabbix-agent</h6><h6 id="3-8-监控端验证"><a href="#3-8-监控端验证" class="headerlink" title="3.8 监控端验证"></a>3.8 监控端验证</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@zabbix-server ~]# zabbix_get -s web1 -k nginx.status[ping]</span><br><span class="line">1</span><br><span class="line"></span><br><span class="line">[root@zabbix-server ~]# zabbix_get -s web1 -k nginx.status[requests]</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+<h6 id="3-9-创建nginx监控模板"><a href="#3-9-创建nginx监控模板" class="headerlink" title="3.9 创建nginx监控模板"></a>3.9 创建nginx监控模板</h6><p><img src="/2018/09/12/企业级监控方案-zabbix/20.1.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/20.2.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/20.3.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/20.4.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/20.5.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/20.6.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/20.7.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/20.8.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/20.9.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/20.10.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/20.11.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/20.12.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/20.13.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/20.14.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/20.15.png" alt="avatar"></p>
+<p>注：压力测试 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@zabbix-server ~]# ab -n 10000 -c 1000 http://web1</span><br></pre></td></tr></table></figure>
+<h4 id="十三、MySQL监控"><a href="#十三、MySQL监控" class="headerlink" title="十三、MySQL监控"></a>十三、MySQL监控</h4><p>1、被监控主机安装mariadb数据库管理系统 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@web1 ~]# yum -y install mariadb mariadb-server</span><br></pre></td></tr></table></figure>
+<p>2、开启mairadb </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@web1 ~]# systemctl enable mariadb</span><br><span class="line">[root@web1 ~]# systemctl start mariadb</span><br></pre></td></tr></table></figure>
+<p>3、查看被监控端文件 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@web1 zabbix_agentd.d]# cat userparameter_mysql.conf</span><br><span class="line">UserParameter=mysql.status[*],echo &quot;show global status where Variable_name=&apos;$1&apos;;&quot; | HOME=/var/lib/zabbix mysql -N | awk &apos;&#123;print $$2&#125;&apos;</span><br><span class="line"></span><br><span class="line">[root@web1 zabbix_agentd.d]# mysql</span><br><span class="line">MariaDB [(none)]&gt; show status;</span><br><span class="line">#查看到的413项全部可以进行监控，用于mysql.status[*] *为参数使用</span><br></pre></td></tr></table></figure>
+<p>4、监控端进行验证 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@zabbix-server ~]# zabbix_get -s web1 -k mysql.status[Uptime]</span><br><span class="line">380</span><br></pre></td></tr></table></figure>
+<p>5、zabbix web端操作</p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/21.1.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/21.2.png" alt="avatar"></p>
+<h4 id="十四、邮件告警"><a href="#十四、邮件告警" class="headerlink" title="十四、邮件告警"></a>十四、邮件告警</h4><p><img src="/2018/09/12/企业级监控方案-zabbix/22.1.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.2.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.3.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.4.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.5.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.6.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.7.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.8.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.9.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.10.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.11.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.12.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.13.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.14.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.15.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.16.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.17.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.18.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.19.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.20.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.21.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.22.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.23.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.24.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.25.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.26.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.27.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/22.28.png" alt="avatar"></p>
+<h4 id="十五、微信告警"><a href="#十五、微信告警" class="headerlink" title="十五、微信告警"></a>十五、微信告警</h4><h6 id="1、注册企业微信"><a href="#1、注册企业微信" class="headerlink" title="1、注册企业微信"></a>1、注册企业微信</h6><p>​         <a href="http://work.weixin.qq.com" target="_blank" rel="noopener">http://work.weixin.qq.com</a></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/23.1.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/23.2.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/23.3.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/23.4.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/23.5.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/23.6.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/23.7.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/23.8.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/23.9.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/23.10.png" alt="avatar"></p>
+<p>基于企业微信提供API文档编写Python脚本文件 </p>
+<p>下载：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/loong576/Wechat-Alert-for-Zabbix.git</span><br></pre></td></tr></table></figure>
+<p>下载完成后的两个动作： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1、#less README.md</span><br><span class="line"></span><br><span class="line">2、#cp ./wechat_alert.py  /usr/lib/zabbix/alertscripts</span><br></pre></td></tr></table></figure>
+<p>脚本复制完成后，验证当前系统是否支持脚本运行环境： </p>
+<p>1、验证是否存在脚本里包含模块   requests   json   sys</p>
+<p>2、安装pip工具</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#yum -y install python-devel epel-release</span><br><span class="line"># yum -y install python2-pip</span><br><span class="line"># pip install --upgrade pip</span><br><span class="line"></span><br><span class="line">#pip list #验证第三方模块是否安装</span><br><span class="line"># pip install ipython #验证系统自带模块</span><br><span class="line">#ipython</span><br><span class="line">In [1]:import json	</span><br><span class="line">In [1]:json. (按Tab)</span><br></pre></td></tr></table></figure>
+<p>3、修改python脚本</p>
+<p>​    3.1、# vim /usr/lib/zabbix/alertscripts/wechat_alert.py</p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/24.1.png" alt="avatar"></p>
+<p>4、赋予文件可执行权限 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># chmod 755 /usr/lib/zabbix/alertscripts/wechat_alert.py</span><br></pre></td></tr></table></figure>
+<h6 id="2-zabbix-server-web配置"><a href="#2-zabbix-server-web配置" class="headerlink" title="2. zabbix-server web配置:"></a>2. zabbix-server web配置:</h6><p>1、报警媒介 </p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/25.1.png" alt="avatar"></p>
+<p>2、添加用户组</p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/25.2.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/25.3.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/25.4.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/25.5.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/25.6.png" alt="avatar"></p>
+<p>4、添加动作</p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/25.7.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/25.8.png" alt="avatar"></p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/25.9.png" alt="avatar"></p>
+<p>验证：</p>
+<p>​    产生问题</p>
+<p><img src="/2018/09/12/企业级监控方案-zabbix/25.10.png" alt="avatar"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@web1 zabbix]# dd if=/dev/zero of=/mnt/disk.img bs=400M count=4</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li><p>查看告警</p>
+<p>手机下载企业微信—&gt;使用微信授权登录—-&gt;进入企业—-&gt;打开工作台—&gt;点击应用进入即可。 </p>
+</li>
+<li><p>附python脚本</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/python2.7</span><br><span class="line">#_*_coding:utf-8 _*_</span><br><span class="line">#auther:火星小刘 </span><br><span class="line">import requests,sys,json</span><br><span class="line">import urllib3</span><br><span class="line">urllib3.disable_warnings()</span><br><span class="line"> </span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(&apos;utf-8&apos;)</span><br><span class="line"></span><br><span class="line">def GetToken(Corpid,Secret):</span><br><span class="line">    Url = &quot;https://qyapi.weixin.qq.com/cgi-bin/gettoken&quot;</span><br><span class="line">    Data = &#123;</span><br><span class="line">        &quot;corpid&quot;:Corpid,</span><br><span class="line">        &quot;corpsecret&quot;:Secret</span><br><span class="line">    &#125;</span><br><span class="line">    r = requests.get(url=Url,params=Data,verify=False)</span><br><span class="line">    Token = r.json()[&apos;access_token&apos;]</span><br><span class="line">    return Token</span><br><span class="line"></span><br><span class="line">def SendMessage(Token,User,Agentid,Subject,Content):</span><br><span class="line">    Url = &quot;https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=%s&quot; % Token</span><br><span class="line">    Data = &#123;</span><br><span class="line">        #&quot;totag&quot;: Tagid,                                # 企业号中的标签id，群发使用（推荐）</span><br><span class="line">        #&quot;toparty&quot;: Partyid                             # 企业号中的部门id，群发时使用。</span><br><span class="line">        &quot;msgtype&quot;: &quot;text&quot;,                              # 消息类型。</span><br><span class="line">        &quot;agentid&quot;: Agentid,                             # 企业号中的应用id。</span><br><span class="line">        &quot;text&quot;: &#123;</span><br><span class="line">            &quot;content&quot;: Subject + &apos;\n&apos; + Content</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;safe&quot;: &quot;0&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    r = requests.post(url=Url,data=json.dumps(Data),verify=False)</span><br><span class="line">    return r.text</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    User = sys.argv[1]                                        # zabbix传过来的第一个参数</span><br><span class="line">    Subject = sys.argv[2]                                     # zabbix传过来的第二个参数</span><br><span class="line">    Content = sys.argv[3]                                     # zabbix传过来的第三个参数</span><br><span class="line"></span><br><span class="line">    Corpid = &quot;wx0f0c&quot;                                         # CorpID是企业号的标识</span><br><span class="line">    Secret = &quot;cecnGXBY&quot;     # Secret是管理组凭证密钥</span><br><span class="line">    #Tagid = &quot;1&quot;                                              # 通讯录标签ID</span><br><span class="line">    Agentid = &quot;1&quot;                                             # 应用ID</span><br><span class="line">    #Partyid = &quot;1&quot;                                            # 部门ID</span><br><span class="line"></span><br><span class="line">    Token = GetToken(Corpid, Secret)</span><br><span class="line">    Status = SendMessage(Token,User,Agentid,Subject,Content)</span><br><span class="line">    print Status</span><br></pre></td></tr></table></figure>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://www.bro-camper.top">Camper</a>
+            <p>原文链接: <a href="http://www.bro-camper.top/2018/09/12/企业级监控方案-zabbix/">http://www.bro-camper.top/2018/09/12/企业级监控方案-zabbix/</a>
+            <p>发表日期: <a href="http://www.bro-camper.top/2018/09/12/企业级监控方案-zabbix/">September 12th 2018, 11:53:40 pm</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/09/12/网络基础/" title= 网络基础 >
+                    <div class="prevTitle">网络基础</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:Bro-camper@outlook.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="http://github.com/Bro-camper" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/wechat.png" />
+                </span>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title=qq>
+                  
+                  <img class="profile-qr" src="/assets/qq.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo 
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>  -->
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Zabbix监控概述"><span class="toc-number">1.</span> <span class="toc-text">Zabbix监控概述</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#一、Zabbix监控系统所监控对象"><span class="toc-number">1.1.</span> <span class="toc-text">一、Zabbix监控系统所监控对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二、Zabbix监控方式："><span class="toc-number">1.2.</span> <span class="toc-text">二、Zabbix监控方式：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三、Zabbix监控端安装配置"><span class="toc-number">1.3.</span> <span class="toc-text">三、Zabbix监控端安装配置</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-1-帮助文档"><span class="toc-number">1.3.1.</span> <span class="toc-text">3.1 帮助文档</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-部署Zabbix监控端"><span class="toc-number">1.3.2.</span> <span class="toc-text">3.2 部署Zabbix监控端</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#3-2-1监控端服务包安装"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">3.2.1监控端服务包安装</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#四、Zabbix-agent部署"><span class="toc-number">1.4.</span> <span class="toc-text">四、Zabbix-agent部署</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#五、Zabbix监控端测试"><span class="toc-number">1.5.</span> <span class="toc-text">五、Zabbix监控端测试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#六、登录zabbix监控平台"><span class="toc-number">1.6.</span> <span class="toc-text">六、登录zabbix监控平台</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#七、监控配置"><span class="toc-number">1.7.</span> <span class="toc-text">七、监控配置</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#7-1-添加监控主机"><span class="toc-number">1.7.1.</span> <span class="toc-text">7.1 添加监控主机</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#八、使用监控模板进行监控操作"><span class="toc-number">1.8.</span> <span class="toc-text">八、使用监控模板进行监控操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#十、添加新被监控主机（创建应用集、监控项等）"><span class="toc-number">1.9.</span> <span class="toc-text">十、添加新被监控主机（创建应用集、监控项等）</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#10-1-添加应用集"><span class="toc-number">1.9.1.</span> <span class="toc-text">10.1 添加应用集</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#10-2-添加监控项"><span class="toc-number">1.9.2.</span> <span class="toc-text">10.2 添加监控项</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#10-3-添加触发器"><span class="toc-number">1.9.3.</span> <span class="toc-text">10.3 添加触发器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#10-4-添加图形"><span class="toc-number">1.9.4.</span> <span class="toc-text">10.4 添加图形</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#10-5-添加聚合图形"><span class="toc-number">1.9.5.</span> <span class="toc-text">10.5 添加聚合图形</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#10-6-添加监控系统收集到被监控主机的监控数据"><span class="toc-number">1.9.6.</span> <span class="toc-text">10.6 添加监控系统收集到被监控主机的监控数据</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#十一、被监控主机自动注册"><span class="toc-number">1.10.</span> <span class="toc-text">十一、被监控主机自动注册</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#十二、http监控"><span class="toc-number">1.11.</span> <span class="toc-text">十二、http监控</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1、Apache-httpd-状态监控"><span class="toc-number">1.11.1.</span> <span class="toc-text">1、Apache httpd 状态监控</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2、Apache-httpd访问监控"><span class="toc-number">1.11.2.</span> <span class="toc-text">2、Apache httpd访问监控</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#2-1-Apache-httpd状态获取方法"><span class="toc-number">1.11.2.1.</span> <span class="toc-text">2.1 Apache httpd状态获取方法</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-2-监控主机访问"><span class="toc-number">1.11.2.2.</span> <span class="toc-text">2.2 监控主机访问</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-3-监控主机下载监控脚本及模块"><span class="toc-number">1.11.2.3.</span> <span class="toc-text">2.3 监控主机下载监控脚本及模块</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3、Nginx访问监控"><span class="toc-number">1.11.3.</span> <span class="toc-text">3、Nginx访问监控</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#3-1-被监控端安装nginx"><span class="toc-number">1.11.3.1.</span> <span class="toc-text">3.1 被监控端安装nginx</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-2查看被监控端nginx状态模块文件是否安装"><span class="toc-number">1.11.3.2.</span> <span class="toc-text">3.2查看被监控端nginx状态模块文件是否安装</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-3-修改被监控主机nginx配置文件"><span class="toc-number">1.11.3.3.</span> <span class="toc-text">3.3 修改被监控主机nginx配置文件</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-4-在监控主机访问nginx状态文件"><span class="toc-number">1.11.3.4.</span> <span class="toc-text">3.4 在监控主机访问nginx状态文件</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-5-被监控编写监控脚本"><span class="toc-number">1.11.3.5.</span> <span class="toc-text">3.5 被监控编写监控脚本</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-6-创建zabbix-agent片段配置文件"><span class="toc-number">1.11.3.6.</span> <span class="toc-text">3.6 创建zabbix_agent片段配置文件</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-7-重启zabbix-agent"><span class="toc-number">1.11.3.7.</span> <span class="toc-text">3.7 重启zabbix-agent</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-8-监控端验证"><span class="toc-number">1.11.3.8.</span> <span class="toc-text">3.8 监控端验证</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-9-创建nginx监控模板"><span class="toc-number">1.11.3.9.</span> <span class="toc-text">3.9 创建nginx监控模板</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#十三、MySQL监控"><span class="toc-number">1.12.</span> <span class="toc-text">十三、MySQL监控</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#十四、邮件告警"><span class="toc-number">1.13.</span> <span class="toc-text">十四、邮件告警</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#十五、微信告警"><span class="toc-number">1.14.</span> <span class="toc-text">十五、微信告警</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1、注册企业微信"><span class="toc-number">1.14.0.1.</span> <span class="toc-text">1、注册企业微信</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2-zabbix-server-web配置"><span class="toc-number">1.14.0.2.</span> <span class="toc-text">2. zabbix-server web配置:</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 6
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span><a class="archive-post-title" href= "/2018/09/12/企业级监控方案-zabbix/" >企业级监控方案--zabbix</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span><a class="archive-post-title" href= "/2018/09/12/网络基础/" >网络基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span><a class="archive-post-title" href= "/2018/09/12/iptables简单入门/" >iptables简单入门</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span><a class="archive-post-title" href= "/2018/09/12/持续集成-gitlab/" >持续集成-gitlab</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span><a class="archive-post-title" href= "/2018/09/12/tomcat性能优化/" >tomcat性能优化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/12</span><a class="archive-post-title" href= "/2018/09/12/持续集成-jenkins（上）/" >持续集成-jenkins（上）</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Camper"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
